@@ -17,10 +17,7 @@ package com.atguigu.java;
 
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class FileReaderWriterTest {
 
@@ -164,5 +161,95 @@ public class FileReaderWriterTest {
             }
         }
 
+    }
+    /*
+    *   结论：
+    *   1、对于文本文件(.txt、.java、.C),使用字符流处理
+    *   2、对于非文本文件(.jpg、.mp3、...)，使用字节流处理
+    *
+    *
+    * */
+
+    @Test
+    public void FileInputStreamTest() {
+        FileInputStream fileInputStream = null;
+        FileOutputStream fileOutputStream = null;
+        try {
+            // 1、创建File类对象，指明读入和写出文件
+            File srcFile = new File("11.jpg");
+            File distFile = new File("22.jpg");
+            // 2、创建输入流和输出流
+            fileInputStream = new FileInputStream(srcFile);
+            fileOutputStream = new FileOutputStream(distFile);
+            // 3、数据的读入和写出操作
+            byte[] buffers = new byte[5];
+            int len;
+            while((len = fileInputStream.read(buffers)) != -1) {
+                fileOutputStream.write(buffers, 0, len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if(fileOutputStream != null ) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void copyFile(String srcPath, String distPath) {
+        FileInputStream fileInputStream = null;
+        FileOutputStream fileOutputStream = null;
+        try {
+            // 1、创建File类，读取和写入文件
+            File file1 = new File(srcPath);
+            File file2 = new File(distPath);
+            // 2、创建输入流和输出流
+            fileInputStream = new FileInputStream(file1);
+            fileOutputStream = new FileOutputStream(file2);
+            // 3、读取文件流并输出文件流
+            byte[] bytes = new byte[1024];
+            int len;
+            while ((len = (fileInputStream.read(bytes))) != -1) {
+                fileOutputStream.write(bytes, 0, len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Test
+    public void copyFileTest() {
+        long start = System.currentTimeMillis();
+        String srcPath = "C:\\Users\\12468\\Pictures\\1.mp4";
+        String distPath = "C:\\Users\\12468\\Pictures\\2.mp4";
+        copyFile(srcPath, distPath);
+        long end = System.currentTimeMillis();
+        System.out.println("复制视频花费的时间：" + (end - start)); // 1447
     }
 }
